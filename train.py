@@ -9,7 +9,10 @@ from options import TrainOptions
 from model import ICAM
 from matplotlib import pyplot as plt
 import time
+import os
 import json
+import torchvision
+import numpy as np
 import torch
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score, mean_absolute_error, \
     mean_squared_error
@@ -20,7 +23,8 @@ IMAGE_SIZE = 128
 LATENT_3D = 640
 LATENT_2D = 64
 RESIZE_IMAGE = True
-RESIZE_SIZE = (128, 160, 128)
+RESIZE_SIZE_3D = (128, 160, 128)
+RESIZE_SIZE_2D = (128, 160)
 AGE_RANGE_0 = (40,65)
 AGE_RANGE_1 = (65,90)
 
@@ -40,7 +44,10 @@ def main():
     opts.age_range_0 = AGE_RANGE_0
     opts.age_range_1 = AGE_RANGE_1
     opts.resize_image = RESIZE_IMAGE
-    opts.resize_size = RESIZE_SIZE
+    if opts.data_type == '2d':
+        opts.resize_size = RESIZE_SIZE_2D
+    elif opts.data_type == '3d':
+        opts.resize_size = RESIZE_SIZE_3D
     ep0 = 0
     total_it = 0
     val_accuracy = np.zeros(opts.n_ep)
@@ -69,6 +76,8 @@ def main():
     elif opts.data_type == 'biobank_age':
         healthy_dataloader, healthy_val_dataloader, healthy_test_dataloader, \
         anomaly_dataloader, anomaly_val_dataloader, anomaly_test_dataloader = init_biobank_age_dataloader(opts)
+    elif opts.data_type == 'dhcp_2d':
+        healthy_dataloader, healthy_val_dataloader, healthy_test_dataloader, anomaly_dataloader, anomaly_val_dataloader, anomaly_test_dataloader = init_dhcp_dataloader_2d(opts)
 
     print('\n--- load model ---')
     model = ICAM(opts)

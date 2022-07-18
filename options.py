@@ -12,9 +12,9 @@ class TrainOptions():
         self.parser = argparse.ArgumentParser()
 
         # data loader related
-        self.parser.add_argument('--dataroot', type=str, default='./datasets',
+        self.parser.add_argument('--dataroot', type=str, default='/data/helena/dhcp-2d',
                                  help='path to data')
-        self.parser.add_argument('--data_type', type=str, default='syn2d', choices=['syn2d', 'biobank_age'],
+        self.parser.add_argument('--data_type', type=str, default='dhcp_2d', choices=['syn2d', 'biobank_age', 'dhcp_2d', 'dhcp_3d'],
                                  help='data to load' 
                                       'options: syn2d [128, 128]'
                                       'biobank_age [128, 160, 128]'
@@ -23,7 +23,7 @@ class TrainOptions():
                                  help='whether to load 2d or 3d networks. Options: 2d, 3d')
 
         # biobank related
-        self.parser.add_argument('--label_path', type=str, default='/data/biobank/biobank_labels_filtered.pkl',
+        self.parser.add_argument('--label_path', type=str, default= '/data/helena/labels_ants_full.pkl',
                                  help='path of data')
         self.parser.add_argument('--aug_rician_noise', type=int, default=0,
                                  help='whether to use rician noise augmentation'
@@ -93,10 +93,10 @@ class TrainOptions():
                                                                                        'random z latent, '
                                                                                        'and feed to generator z '
                                                                                        'from correct class')
-        self.parser.add_argument('--regression', type=bool, default=False, help='whether to add another regression loss'
+        self.parser.add_argument('--regression', type=bool, default=True, help='whether to add another regression loss'
                                                                                 ' in the attribute encoder')
         self.parser.add_argument('--gpu', type=bool, default=True, help='whether to use gpu')
-        self.parser.add_argument('--device', type=int, default=0, help='which device num to use: 0,1,2')
+        self.parser.add_argument('--device', type=int, default=1, help='which device num to use: 0,1,2')
 
     def parse(self):
         opt = self.parser.parse_args()
